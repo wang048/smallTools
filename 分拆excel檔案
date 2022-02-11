@@ -1,1 +1,65 @@
+#分拆檔案 - 依類別
+import pandas as pd
+from os import listdir
+from os.path import isfile, isdir, join, splitext
 
+# iris = pd.read_excel("I:\\CA\\HRD\\HR\\T&D\\08.Project\\2020\\T&D 共用\\人事資料for訓練用\\員工資料總檔.xlsx")
+# class_list = list(iris['中心'].drop_duplicates())
+# for i in class_list:
+#     iris1 = iris[iris['中心']==i] 
+#     iris1.to_excel('G:\\test\\%s.xlsx'%(i))
+
+
+yourPath = "G:\\test\\"
+files = listdir(yourPath)
+
+for f in files:
+    iris2 = pd.read_excel("G:\\test\\" + f)
+    class_list2 = list(iris2['處'].drop_duplicates())
+    for i in class_list2:
+        iris3 = iris2[iris2['處']==i] 
+        iris3.to_excel('G:\\test\\%s.xlsx'%(i))
+        
+        
+#分拆檔案 - 依筆數
+
+#!/usr/bin/env python3
+# encoding:utf-8
+'''
+@author: lierl
+@file: do_split_excel.py
+@time: 2018/4/13 17:28
+'''
+__author__ = 'lierl'
+import xlrd
+import xlwt
+
+limit = 1000
+readbook = "G:\\●可刪●\\新增資料夾\\員工資料總檔.xlsx" #原始檔案路徑
+savebook = "G:\\●可刪●\\新增資料夾\\" #要儲存的目錄
+data = xlrd.open_workbook(readbook)
+# 獲取sheet
+table = data.sheets()[0]#獲取第一個sheet的所有資料
+
+# 行數
+nrows = table.nrows
+# 列數
+ncols = table.ncols
+
+sheets = nrows / limit#總共需要多少excel
+if not sheets.is_integer():#如果不是整除則需要+1
+    sheets = sheets + 1
+title_row = table.row_values(0)#獲取首行的標題
+#
+for i in range(0, int(sheets)):
+    workbook = xlwt.Workbook(encoding='ascii')
+    worksheet = workbook.add_sheet(sheetname="0")#設定sheet名稱
+    for col in range(0,ncols):#寫首行的標題
+        worksheet.write(0, col, title_row[col])
+    for row in range(1, limit+1):#每次迴圈limit行
+        newRow = row+limit*i
+        if newRow < nrows:
+            row_content = table.row_values(newRow)
+            for col in range(0, ncols):
+                worksheet.write(row, col, row_content[col])
+    workbook.save(savebook+"\\"+str(i)+".xls")
