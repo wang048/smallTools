@@ -1,1 +1,47 @@
+★★★★★★★★★★★★★★★★★★★TXT檔內容：
 
+#!/usr/bin/python
+
+import imaplib, inspect
+import email
+from email.header import decode_header
+
+mail = imaplib.IMAP4('192.168.21.7')
+mail.login('account', 'password')
+mail.select("Inbox")
+#result, data = mail.uid('search', None, "ALL") # search and return uids instead
+result, data = mail.fetch( "732" , "(RFC822)") # fetch the email body (RFC822) for the given ID
+raw_email = data[0][1]
+
+email_message = email.message_from_string(raw_email)
+
+#print email_message['To']
+#print email.utils.parseaddr(email_message['From']) 
+#print email_message['subject']
+
+
+ss = decode_header(email_message['SUBJECT'])
+
+print ss[0]
+
+★★★★★★★★★★★★★★★★★★★html檔內容 (檔名SetTimeOut.html)：
+
+<input id="name1" type="text" value="You are wesome">
+<input id="name2" type="text" value="You are Awe">
+<input id="name3" type="text" value="0">
+
+<script language="javascript">
+
+var x = 0;
+
+function ShowValue(){
+var v=document.getElementById("name2").value = document.getElementById("name1").value;
+
+x=x+1;
+document.getElementById("name3").value=x;
+var t=setTimeout("ShowValue()",1000);
+}
+
+
+ShowValue();
+</script>
